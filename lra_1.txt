@@ -1,0 +1,99 @@
+ANSWER SHEET FOR LRA1 - Imitation Learning
+NAME: J. Boghaert
+
+##########################################################################################################################################################
+
+Question 1:
+
+METHOD                  PROS                                                CONS                        
+-----------------------+---------------------------------------------------+-------------------------------------------------------------------------------
+                        Cheap set-up / direct control                       Time-intensive if a wide range or variety of tasks is needed
+                        Direct visualization of what the tasks are          Teleoperation is still prone to human errors and constraints
+
+                                                                            Not always available
+
+                        Efficient when learned/taught                       Error on error
+                        Long-term planning                                  Interactive expert needed
+
+                        No interactive expert needed                        No feedback on errors
+-----------------------+---------------------------------------------------+-------------------------------------------------------------------------------
+
+##########################################################################################################################################################
+
+Question 2:
+
+TRIAL                   vref        pthres      gain        distfollow      maxiter             CHANGE
+-----------------------+-----------+-----------+-----------+---------------+-------------------+-----------------------------------------------------------
+1                       0.04        0.8         10          0.3             1000                Almost static behavior (0:03)
+2                       0.4         0.1         10          0.3             1000                Longer distance covered, overshoot is visible, comes gradually back to the lane (0:03)
+3                       0.4         0.1         1000        0.3             1000                Same distance covered, but more unstable, overshoot due to gain is larger (0:03)
+
+4                       1.4         0.8         10          0.3             1000                Does not turn, a distance vertical to the road is covered
+5                       0.9999      0.8         10          0.3             1000                DB reaches corner, not yet in lane, but overshoot stabilizes after some time
+6                       0.9999      0.8         10          10.0            1000                DB ends up in the other lane
+7                       0.9999      0.8         10          0.01            1000                View turns towards the right, not on lane anymore
+
+8                       0.9999      0.8         10          4.0             10000               Near optimal solution used/found
+-----------------------+-----------+-----------+-----------+---------------+-------------------+-----------------------------------------------------------
+
+NOTE:                   If number of steps is increased, a longer distance (0:07) is covered (but does not seem to be consistent?!)
+                        Major issues are misalignment with the road (dynamic/unstable) and the distance covered (distorted image not influenced)
+                        From nsteps = 3000, the corner can be reached
+
+##########################################################################################################################################################
+
+Question 3:
+
+Flat_size = 31968, such that [n,m]x[m,n] makes sense.
+
+PARAMETER                                                           CHANGE              OBSERVATION
+-------------------------------------------------------------------+-------------------+------------------------------------------------------------------
+nn.conv2d(in_channels, out_channels, kernelsize, stride=1, ...)     stride=2            This changes the action_dim to 5 280 000, so change Flat_size again
+                                                                    stride=4            This changes the action_dim to 2016, so change Flat_size again
+
+avg_loss = 0 (initial condition for for-loop)                       avg_loss = -0.20    Loss reduces ofc (see formula in loop)
+batchsize = 10                                                      batchsize = 2       Output loss value decreases almost by a factor 2
+Nepochs (network # training episodes)                               nepochs = 10        Number of output values = nepochs
+
+Learning rate lr = 0.005                                            lr = 0.5            Loss goes down (higher lr)
+                                                                    lr = 0.0005         Loss goes up compared to default value (lower lr)
+
+Weight_decay = default                                              decay = 0.1         Loss goes up compared to default value
+
+Expert configuration parameters                                     See Q.2             See Q.2
+-------------------------------------------------------------------+-------------------+------------------------------------------------------------------
+
+##########################################################################################################################################################
+
+Question 4:
+
+Learning objective is to minimize the Mean Squared Error:
+The mean squared error might not be the optimal or effective cost function (Variance, Mean are prone to outliers and other effects) to yield the desired behavior.
+Other methods could be Mean Absolute Error or Rooted Mean Squared Error.
+Further explanation can be found (incl. comparisons) here: https://medium.com/human-in-a-machine-world/mae-and-rmse-which-metric-is-better-e60ac3bde13d
+
+##########################################################################################################################################################
+
+Question 5:
+
+PARAMETERS USED         vref        pthres      gain        distfollow      maxiter       nsteps    nepochs     batchsize
+-----------------------+-----------+-----------+-----------+---------------+-------------+---------+-----------+-----------------------------------------
+                        0.99999     0.8         14          4.0             1000          4000      350         20
+-----------------------+-----------+-----------+-----------+---------------+-------------+---------+-----------+-----------------------------------------
+
+OUTPUT
+Reset!
+{'Simulator': {'action': [0.9584064, 0.9411293], 'lane_position': {'dist': 0.11306295699660805, 'dot_dir': 0.961551936699245, 'angle_deg': 15.939557467753898, 'angle_rad': 0.2781977591231554}, 'robot_speed': 0.5575168131393375, 'proximity_penalty': 0.0, 'cur_pos': [0.6624969383420086, 0.0, 3.0942749627229995], 'cur_angle': -1.6481804687280124, 'wheel_velocities': [1.1500877, 1.1293552], 'timestamp': 3.73333333333333, 'tile_coords': [1, 5], 'msg': ''}}
+Done!
+
+
+##########################################################################################################################################################
+
+Question 6:
+
+PERFORMANCE
+Shaky performance, the DB goes a bit slower and takes the turns, but overshoots permanently - is not trained/finetuned for the task.
+(Performance for one run only, some other runs are better, but more often worse than the performance described above)
+
+REASONS
+You run an untrained model, in a randomized environment (so probability of ending up with the optimal parameters is near zero). Since there is no trained model/
