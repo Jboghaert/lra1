@@ -10,12 +10,14 @@ METHOD                  PROS                                                CONS
                         Cheap set-up / direct control                       Time-intensive if a wide range or variety of tasks is needed
                         Direct visualization of what the tasks are          Teleoperation is still prone to human errors and constraints
 
-                                                                            Not always available
+                        Readily available (historical), in large	    Data might not be tailored/specific to the task (old, irrelevant)
+			numbers (1) and against no additional effort (2)    So additional cost in data-processing/filtering
 
-                        Efficient when learned/taught                       Error on error
-                        Long-term planning                                  Interactive expert needed
+                        Efficient when learned/taught (iterative)           More complex
+                        Long-term planning possible                         Interactive expert needed
 
                         No interactive expert needed                        No feedback on errors
+			Satisfies the task dynamics			    Not flexible (changing parameters)
 -----------------------+---------------------------------------------------+-------------------------------------------------------------------------------
 
 ##########################################################################################################################################################
